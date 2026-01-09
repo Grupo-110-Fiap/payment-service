@@ -40,7 +40,6 @@ jobs:
   sonar:
     needs: test
     runs-on: ubuntu-latest
-    # environment: payment-service-environments # Removed to avoid potential "environment not found" error if not exists
     steps:
       - uses: actions/checkout@v4
         with:
@@ -83,8 +82,7 @@ jobs:
   build-and-push:
     needs: build
     runs-on: ubuntu-latest
-    # environment: payment-service-environments
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
       image-digest: ${{ steps.build.outputs.digest }}
@@ -132,9 +130,8 @@ jobs:
 
   deploy:
     needs: build-and-push
-    # environment: payment-service-environments
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout
