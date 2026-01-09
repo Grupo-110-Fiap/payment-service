@@ -83,7 +83,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # environment: payment-service-environments
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
       image-digest: ${{ steps.build.outputs.digest }}
@@ -133,7 +133,7 @@ jobs:
     needs: build-and-push
     # environment: payment-service-environments
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout
