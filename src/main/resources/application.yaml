@@ -6,12 +6,25 @@ spring:
   data:
     mongodb:
       uri: ${mongodb-uri}
+
 mercadopago:
   token: ${mp-token}
   notification-url: ${mp-notification-url}
   user-id: ${mp-user-id}
+
 cloud:
   aws:
     sns:
       topic:
         arn: ${sns-topic-arn}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always

@@ -1,0 +1,18 @@
+spring:
+  config:
+    import: "" # Disable AWS import in tests
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+mercadopago:
+  token: test
+  notification-url: test
+  user-id: test
+cloud:
+  aws:
+    sns:
+      topic:
+        arn: test
+management:
+  endpoints:
+    enabled-by-default: false

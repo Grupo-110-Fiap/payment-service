@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.3.5"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("jacoco")
 }
 
 group = "br.com.fiap.techchallenge"
@@ -26,6 +27,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:${awsParameterStoreVersion}")
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-sns:${awsParameterStoreVersion}")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -33,6 +35,8 @@ dependencies {
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:$awsParameterStoreVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.mockk:mockk:1.13.8")
+	testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {
