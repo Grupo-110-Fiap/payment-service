@@ -9,7 +9,6 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: techchallenge/payment-service
-  ECR_REPOSITORY: techchallenge/payment-service
   EKS_CLUSTER_NAME: techchallenge-eks
   SNS_TOPIC_ARN: arn:aws:sns:us-east-1:499243079593:order-payment-topic
 
