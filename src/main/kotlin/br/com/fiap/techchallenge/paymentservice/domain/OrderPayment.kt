@@ -12,7 +12,7 @@ data class OrderPayment(
     val amount: BigDecimal,
     var status: String,
     val mercadoPagoId: String? = null,
-    val qrCode: String? = null, // Dados retornados do MP
+    val qrCode: String? = null,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now()
 )

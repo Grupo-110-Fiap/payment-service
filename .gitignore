@@ -41,6 +41,6 @@ out/
 
 .DS_Store
 src/main/.DS_Store
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
-terraform/.terraform/
+infra/terraform/terraform.tfstate
+infra/terraform/terraform.tfstate.backup
+infra/terraform/.terraform/
