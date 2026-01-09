@@ -1,9 +1,11 @@
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
+
 	id("org.springframework.boot") version "3.3.5"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("jacoco")
+	id("org.sonarqube") version "5.0.0.4638"
 }
 
 group = "br.com.fiap.techchallenge"
@@ -21,6 +23,7 @@ repositories {
 
 val kotlinLoggingJvmVersion = "7.0.13"
 val awsParameterStoreVersion = "3.1.0"
+val mockkVersion = "1.13.8"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -35,7 +38,7 @@ dependencies {
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:$awsParameterStoreVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.mockk:mockk:1.13.8")
+	testImplementation("io.mockk:mockk:$mockkVersion")
 	testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
@@ -45,6 +48,25 @@ kotlin {
 	}
 }
 
-tasks.withType<Test> {
+tasks.test {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+sonarqube {
+	properties {
+		property("sonar.projectKey", "Grupo-110-Fiap_payment-service") // Ajuste conforme gerado no Sonar
+		property("sonar.organization", "grupo-110-fiap")
+		property("sonar.host.url", "https://sonarcloud.io")
+
+		property("sonar.exclusions", "**/config/**, **/model/**, **/dto/**")
+	}
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+	dependsOn(tasks.test)
 }
