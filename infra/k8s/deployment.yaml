@@ -39,6 +39,7 @@ spec:
               port: 8080
             initialDelaySeconds: 40
             periodSeconds: 10
+          envFrom:
             - configMapRef:
                 name: payment-service-config
             - secretRef:
