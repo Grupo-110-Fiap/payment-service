@@ -53,20 +53,11 @@ tasks.test {
 	finalizedBy(tasks.jacocoTestReport)
 }
 
-sonarqube {
-	properties {
-		property("sonar.projectKey", "Grupo-110-Fiap_payment-service") // Ajuste conforme gerado no Sonar
-		property("sonar.organization", "grupo-110-fiap")
-		property("sonar.host.url", "https://sonarcloud.io")
-
-		property("sonar.exclusions", "**/config/**, **/model/**, **/dto/**")
-	}
-}
-
 tasks.jacocoTestReport {
+	dependsOn(tasks.test)
 	reports {
 		xml.required.set(true)
+		csv.required.set(false)
 		html.required.set(true)
 	}
-	dependsOn(tasks.test)
 }

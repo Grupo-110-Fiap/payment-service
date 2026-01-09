@@ -2,21 +2,21 @@ spring:
   application:
     name: payment-service
   config:
-    import: "aws-parameterstore:/payment-service/"
+    import: "optional:aws-parameterstore:/payment-service/"
   data:
     mongodb:
-      uri: ${mongodb-uri}
+      uri: ${MONGODB_URI}
 
 mercadopago:
-  token: ${mp-token}
-  notification-url: ${mp-notification-url}
-  user-id: ${mp-user-id}
+  token: ${MERCADO_PAGO_TOKEN}
+  notification-url: ${MP_NOTIFICATION_URL}
+  user-id: ${MP_USER_ID}
 
 cloud:
   aws:
     sns:
       topic:
-        arn: ${sns-topic-arn}
+        arn: ${SNS_TOPIC_ARN}
 
 management:
   endpoints:

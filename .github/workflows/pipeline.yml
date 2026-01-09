@@ -10,6 +10,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: techchallenge/payment-service
   EKS_CLUSTER_NAME: techchallenge-eks
+  SNS_TOPIC_ARN: arn:aws:sns:us-east-1:499243079593:order-payment-topic
 
 jobs:
   test:
@@ -28,18 +29,17 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Tests
-        run: ./gradlew test
+        run: ./gradlew test jacocoTestReport
 
       - name: Upload Coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: build/reports/jacoco/test/
+          path: build/reports/jacoco/test/jacocoTestReport.xml
 
   sonar:
     needs: test
     runs-on: ubuntu-latest
-    # environment: payment-service-environments # Removed to avoid potential "environment not found" error if not exists
     steps:
       - uses: actions/checkout@v4
         with:
@@ -82,7 +82,6 @@ jobs:
   build-and-push:
     needs: build
     runs-on: ubuntu-latest
-    # environment: payment-service-environments
     if: github.ref == 'refs/heads/main'
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
@@ -131,7 +130,6 @@ jobs:
 
   deploy:
     needs: build-and-push
-    # environment: payment-service-environments
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
@@ -154,8 +152,9 @@ jobs:
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SNS_TOPIC_ARN: ${{ env.SNS_TOPIC_ARN }}
         run: |
           IMAGE_TAG=$(echo "${{ needs.build-and-push.outputs.image-tag }}" | tail -n 1)
           echo "Deploying with image: $IMAGE_TAG"
