@@ -9,7 +9,9 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: techchallenge/payment-service
+  ECR_REPOSITORY: techchallenge/payment-service
   EKS_CLUSTER_NAME: techchallenge-eks
+  SNS_TOPIC_ARN: arn:aws:sns:us-east-1:499243079593:order-payment-topic
 
 jobs:
   test:
@@ -156,6 +158,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
+          SNS_TOPIC_ARN: ${{ env.SNS_TOPIC_ARN }}
         run: |
           IMAGE_TAG=$(echo "${{ needs.build-and-push.outputs.image-tag }}" | tail -n 1)
           echo "Deploying with image: $IMAGE_TAG"
