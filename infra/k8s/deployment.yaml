@@ -44,3 +44,6 @@ spec:
                 name: payment-service-config
             - secretRef:
                 name: payment-service-secret
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
