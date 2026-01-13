@@ -14,10 +14,10 @@ COPY src src
 RUN ./gradlew build -x test --no-daemon
 
 # Stage 2: Run
-FROM eclipse-temurin:21-jre-alpine AS runner
+FROM eclipse-temurin:21-jre AS runner
 
 # Create a non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 USER appuser
 
 WORKDIR /app
