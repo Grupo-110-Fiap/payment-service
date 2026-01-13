@@ -20,10 +20,11 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class MercadoPagoClient(
-    @Value("\${mercadopago.token}") val token: String
+    @Value("\${mercadopago.token}") val token: String,
+    restClientBuilder: RestClient.Builder
 ) {
 
-    private val restClient = RestClient.builder()
+    private val restClient = restClientBuilder
         .baseUrl("https://api.mercadopago.com/v1")
         .defaultHeader("Authorization", "Bearer $token")
         .build()
