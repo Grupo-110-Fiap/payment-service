@@ -45,8 +45,11 @@ dependencies {
 }
 
 kotlin {
+
+	jvmToolchain(21)
+
 	compilerOptions {
-		freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+		freeCompilerArgs.addAll("-Xjsr305=strict")
 	}
 }
 
@@ -62,6 +65,17 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 		html.required.set(true)
 	}
+
+	classDirectories.setFrom(files(classDirectories.files.map {
+		fileTree(it) {
+			exclude(
+				"**/dto/**",
+				"**/domain/**",
+				"**/configuration/**",
+				"**/*Application*"
+			)
+		}
+	}))
 }
 
 tasks.jacocoTestCoverageVerification {
