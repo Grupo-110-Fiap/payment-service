@@ -13,6 +13,7 @@ import org.springframework.test.web.client.match.MockRestRequestMatchers.*
 import org.springframework.test.web.client.response.MockRestResponseCreators.*
 import org.springframework.web.client.RestClient
 import java.math.BigDecimal
+import org.hamcrest.Matchers.*
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -30,8 +31,13 @@ class MercadoPagoClientTest {
                 converters.clear()
                 converters.add(MappingJackson2HttpMessageConverter(objectMapper))
             }
+
+        // Create mock server BEFORE creating the client
+        val mockServerBuilder = MockRestServiceServer.bindTo(builder)
+        mockServer = mockServerBuilder.build()
+
+        // Now create the client with the mocked builder
         mercadoPagoClient = MercadoPagoClient("test_token", builder)
-        mockServer = MockRestServiceServer.bindTo(builder).build()
     }
 
     @Test
@@ -49,6 +55,7 @@ class MercadoPagoClientTest {
         mockServer.expect(requestTo("https://api.mercadopago.com/v1/orders"))
             .andExpect(method(HttpMethod.POST))
             .andExpect(header("Authorization", "Bearer test_token"))
+            .andExpect(header("X-Idempotency-Key", notNullValue()))
             .andRespond(withSuccess(objectMapper.writeValueAsString(expectedResponse), MediaType.APPLICATION_JSON))
 
         val result = mercadoPagoClient.createQrCodeOrder(orderId, amount)
@@ -66,7 +73,8 @@ class MercadoPagoClientTest {
 
         mockServer.expect(requestTo("https://api.mercadopago.com/v1/orders"))
             .andExpect(method(HttpMethod.POST))
-            .andRespond(withServerError())
+            .andExpect(header("Authorization", "Bearer test_token"))
+            .andRespond(withUnauthorizedRequest().body("{\"code\":\"unauthorized\",\"message\":\"authorization value not present\"}"))
 
         val result = mercadoPagoClient.createQrCodeOrder(orderId, amount)
 
