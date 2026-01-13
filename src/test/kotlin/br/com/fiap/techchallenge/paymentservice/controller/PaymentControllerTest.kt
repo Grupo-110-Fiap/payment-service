@@ -19,8 +19,7 @@ class PaymentControllerTest {
 
     @Test
     fun `should create payment via post`() {
-        val request = OrderPaymentRequest(orderId = "123", amount = BigDecimal.TEN)
-        val payment = OrderPayment(orderId = "123", amount = BigDecimal.TEN, status = "created")
+        val payment = OrderPayment(orderId = "123", amount = BigDecimal.TEN, status = "created", qrCode = "qr-data")
 
         every { service.createPayment(any()) } returns payment
 
@@ -31,6 +30,7 @@ class PaymentControllerTest {
             status { isCreated() }
             jsonPath("$.orderId") { value("123") }
             jsonPath("$.status") { value("created") }
+            jsonPath("$.qrCode") { value("qr-data") }
         }
     }
 }

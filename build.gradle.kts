@@ -1,9 +1,13 @@
+import java.math.BigDecimal
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
+
 	id("org.springframework.boot") version "3.3.5"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("jacoco")
+	id("org.sonarqube") version "5.0.0.4638"
 }
 
 group = "br.com.fiap.techchallenge"
@@ -21,6 +25,7 @@ repositories {
 
 val kotlinLoggingJvmVersion = "7.0.13"
 val awsParameterStoreVersion = "3.1.0"
+val mockkVersion = "1.13.8"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -35,7 +40,7 @@ dependencies {
 	implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:$awsParameterStoreVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.mockk:mockk:1.13.8")
+	testImplementation("io.mockk:mockk:$mockkVersion")
 	testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
@@ -45,7 +50,7 @@ kotlin {
 	}
 }
 
-tasks.withType<Test> {
+tasks.test {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
 }
@@ -56,5 +61,16 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 		csv.required.set(false)
 		html.required.set(true)
+	}
+}
+
+tasks.jacocoTestCoverageVerification {
+	dependsOn(tasks.test)
+	violationRules {
+		rule {
+			limit {
+				minimum = BigDecimal("0.80")
+			}
+		}
 	}
 }

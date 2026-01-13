@@ -5,7 +5,9 @@ import br.com.fiap.techchallenge.paymentservice.service.PaymentService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -28,5 +30,15 @@ class WebhookControllerTest {
         }
 
         verify { service.processWebhook(any()) }
+    }
+
+    @Test
+    fun `should ignore invalid payload`() {
+        val payload = MercadoPagoWebhookPayload(action = null, type = null, data = null)
+
+        val response = controller.receiveNotification(payload)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        verify(exactly = 0) { service.processWebhook(any()) }
     }
 }
