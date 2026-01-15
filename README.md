@@ -178,3 +178,6 @@ Recebe notificações de webhook do Mercado Pago.
 }
 ```
 
+<!-- Relative Markdown -->
+![Coverage report](images/coverage/png/coverage.png)
+
